@@ -1,0 +1,20 @@
+SELECT
+  fullVisitorId, 
+  channelGrouping, 
+  date, 
+  visitId, visitNumber,
+  device.browser, device.operatingSystem,device.deviceCategory, 
+  geoNetwork.continent,geoNetwork.country, geoNetwork.city, geoNetwork.metro,
+  socialEngagementType, 
+  totals.bounces, totals.hits, totals.newVisits, totals.pageviews, totals.transactionRevenue,
+  trafficSource.adContent, trafficSource.isTrueDirect, trafficSource.referralPath, trafficSource.source, 
+  MAX(visitNumber) OVER (partition by fullVisitorId) AS visit_count_per_user,
+  AVG(totals.timeOnSite) OVER (partition by fullVisitorId) AS avg_time_onsite_per_user
+
+FROM
+  `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+WHERE
+  _TABLE_SUFFIX BETWEEN '20160801'
+  AND '20170801'
+ORDER BY
+  date;
